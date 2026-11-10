@@ -13,9 +13,13 @@ def extract_features_from_image(image_path):
         sk = skew(arr)
         kt = kurtosis(arr)
         
-        hist, _ = np.histogram(arr, bins=16, range=(0, 255), density=True)
+        hist, _ = np.histogram(arr, bins=64, range=(0, 255), density=True)
         
-        features = np.hstack(([mean, variance, sk, kt], hist))
+        q25 = np.percentile(arr, 25)
+        q75 = np.percentile(arr, 75)
+        iqr = q75 - q25
+        
+        features = np.hstack(([mean, variance, sk, kt, q25, q75, iqr], hist))
         return features
 
 def build_dataset(split="train", processed_dir="data/processed"):
@@ -28,7 +32,7 @@ def build_dataset(split="train", processed_dir="data/processed"):
         dir_path = os.path.join(processed_dir, split, f"{cat}_residual")
         files = glob.glob(os.path.join(dir_path, "*.png"))
         
-        print(f"Extrayendo características de {split}/{cat} ({len(files)} imágenes)...")
+        print(f"Extrayendo características avanzadas de {split}/{cat} ({len(files)} imágenes)...")
         for f in files:
             feats = extract_features_from_image(f)
             features_list.append(feats)
@@ -47,7 +51,7 @@ def main():
     np.save("data/features/X_test.npy", X_test)
     np.save("data/features/y_test.npy", y_test)
     
-    print("¡Extracción e ingesta de características completada con éxito!")
+    print("¡Extracción avanzada completada con éxito!")
     print(f"X_train shape: {X_train.shape}, y_train shape: {y_train.shape}")
     print(f"X_test shape: {X_test.shape}, y_test shape: {y_test.shape}")
 
