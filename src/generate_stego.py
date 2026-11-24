@@ -24,7 +24,7 @@ def embed_lsb(image_path, output_path, payload_rate=0.4, seed=42):
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         stego_img.save(output_path)
 
-def generate_stego_dataset(processed_dir="data/processed", payload_rate=0.4):
+def generate_stego_dataset(processed_dir="data/processed", payload_rate=1.0):
     for split in ["train", "test"]:
         cover_dir = os.path.join(processed_dir, split, "cover")
         stego_dir = os.path.join(processed_dir, split, "stego")
